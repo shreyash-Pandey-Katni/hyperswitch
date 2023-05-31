@@ -80,8 +80,23 @@ pub async fn payouts_retrieve(
     .await
 }
 
+/// Payouts - Update
+#[utoipa::path(
+    post,
+    path = "/payouts/{payout_id}",
+    params(
+        ("payout_id" = String, Path, description = "The identifier for payout]")
+    ),
+    request_body=PayoutCreateRequest,
+    responses(
+        (status = 200, description = "Payout updated", body = PayoutCreateResponse),
+        (status = 400, description = "Missing Mandatory fields")
+    ),
+    tag = "Payouts",
+    operation_id = "Update a Payout",
+    security(("api_key" = []))
+)]
 #[instrument(skip_all, fields(flow = ?Flow::PayoutsUpdate))]
-// #[post("/update")]
 pub async fn payouts_update(
     state: web::Data<AppState>,
     req: HttpRequest,

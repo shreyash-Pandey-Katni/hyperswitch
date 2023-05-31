@@ -85,6 +85,8 @@ pub struct Settings {
     pub dummy_connector: DummyConnector,
     #[cfg(feature = "email")]
     pub email: EmailSettings,
+    #[cfg(feature = "payouts")]
+    pub payouts: Payouts,
 }
 
 #[derive(Debug, Deserialize, Clone, Default)]
@@ -617,4 +619,9 @@ mod payment_method_deserialization_test {
         let test_pm = pm_deser(deserializer);
         assert!(test_pm.is_ok())
     }
+}
+
+#[derive(Debug, Deserialize, Clone, Default)]
+pub struct Payouts {
+    pub payout_eligibility: bool,
 }

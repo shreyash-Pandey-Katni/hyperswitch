@@ -16,7 +16,6 @@ pub enum PayoutRequest {
     PayoutRetrieveRequest(PayoutRetrieveRequest),
 }
 
-// #[cfg(feature = "payouts")]
 #[derive(Default, Debug, Deserialize, Serialize, Clone, ToSchema)]
 #[serde(deny_unknown_fields)]
 pub struct PayoutCreateRequest {
@@ -28,7 +27,7 @@ pub struct PayoutCreateRequest {
         max_length = 30,
         example = "payout_mbabizu24mvu3mela5njyhpit4"
     )]
-    pub payout_id: Option<String>, // TODO: Update this to PayoutIdType similar to PaymentIdType
+    pub payout_id: Option<String>, // TODO: #1321 https://github.com/juspay/hyperswitch/issues/1321
 
     /// This is an identifier for the merchant account. This is inferred from the API key
     /// provided during the request

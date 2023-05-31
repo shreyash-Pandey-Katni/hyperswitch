@@ -64,6 +64,7 @@ pub trait RouterData {
     fn get_payment_method_token(&self) -> Result<String, Error>;
     fn get_customer_id(&self) -> Result<String, Error>;
     fn get_connector_customer_id(&self) -> Result<String, Error>;
+    fn get_payout_method_data(&self) -> Result<api::PayoutMethodData, Error>;
 }
 
 impl<Flow, Request, Response> RouterData for types::RouterData<Flow, Request, Response> {
@@ -156,6 +157,11 @@ impl<Flow, Request, Response> RouterData for types::RouterData<Flow, Request, Re
         self.connector_customer
             .to_owned()
             .ok_or_else(missing_field_err("connector_customer_id"))
+    }
+    fn get_payout_method_data(&self) -> Result<api::PayoutMethodData, Error> {
+        self.payout_method_data
+            .to_owned()
+            .ok_or_else(missing_field_err("payout_method_data"))
     }
 }
 

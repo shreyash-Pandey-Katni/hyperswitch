@@ -218,6 +218,9 @@ pub struct RouterData<Flow, Request, Response> {
 
     /// Contains any error response that the connector returns.
     pub payment_method_id: Option<String>,
+
+    /// Contains payout method data
+    pub payout_method_data: Option<api::PayoutMethodData>,
 }
 
 #[derive(Debug, Clone)]
@@ -227,7 +230,6 @@ pub struct PayoutsData {
     pub connector_payout_id: Option<String>,
     pub destination_currency: storage_enums::Currency,
     pub source_currency: storage_enums::Currency,
-    pub payout_method_data: payout_types::PayoutMethodData,
     pub payout_type: storage_enums::PayoutType,
     pub entity_type: storage_enums::EntityType,
 }
@@ -803,6 +805,7 @@ impl<F1, F2, T1, T2> From<(&RouterData<F1, T1, PaymentsResponseData>, T2)>
             payment_method_token: None,
             preprocessing_id: None,
             connector_customer: data.connector_customer.clone(),
+            payout_method_data: data.payout_method_data.clone(),
         }
     }
 }
