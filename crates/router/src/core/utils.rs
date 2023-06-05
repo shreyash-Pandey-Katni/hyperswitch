@@ -21,6 +21,7 @@ use crate::{
     utils::{generate_id, OptionExt, ValueExt},
 };
 
+#[cfg(feature = "payouts")]
 #[instrument(skip_all)]
 pub async fn get_mca_for_payout<'a>(
     state: &'a AppState,
@@ -53,6 +54,7 @@ pub async fn get_mca_for_payout<'a>(
     }
 }
 
+#[cfg(feature = "payouts")]
 #[instrument(skip_all)]
 #[allow(clippy::too_many_arguments)]
 pub async fn construct_payout_router_data<'a, F>(
@@ -227,6 +229,7 @@ pub async fn construct_refund_router_data<'a, F>(
         payment_method_token: None,
         connector_customer: None,
         preprocessing_id: None,
+        #[cfg(feature = "payouts")]
         payout_method_data: None,
     };
 
@@ -413,6 +416,7 @@ pub async fn construct_accept_dispute_router_data<'a>(
         connector_customer: None,
         customer_id: None,
         preprocessing_id: None,
+        #[cfg(feature = "payouts")]
         payout_method_data: None,
     };
     Ok(router_data)
@@ -473,6 +477,7 @@ pub async fn construct_submit_evidence_router_data<'a>(
         connector_customer: None,
         customer_id: None,
         preprocessing_id: None,
+        #[cfg(feature = "payouts")]
         payout_method_data: None,
     };
     Ok(router_data)
@@ -534,6 +539,7 @@ pub async fn construct_upload_file_router_data<'a>(
         connector_customer: None,
         customer_id: None,
         preprocessing_id: None,
+        #[cfg(feature = "payouts")]
         payout_method_data: None,
     };
     Ok(router_data)
@@ -597,6 +603,7 @@ pub async fn construct_defend_dispute_router_data<'a>(
         customer_id: None,
         connector_customer: None,
         preprocessing_id: None,
+        #[cfg(feature = "payouts")]
         payout_method_data: None,
     };
     Ok(router_data)
@@ -658,6 +665,7 @@ pub async fn construct_retrieve_file_router_data<'a>(
         reference_id: None,
         payment_method_token: None,
         preprocessing_id: None,
+        #[cfg(feature = "payouts")]
         payout_method_data: None,
     };
     Ok(router_data)

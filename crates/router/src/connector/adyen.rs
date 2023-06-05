@@ -620,16 +620,22 @@ impl
     }
 }
 
+#[cfg(feature = "payouts")]
 impl api::Payouts for Adyen {}
+#[cfg(feature = "payouts")]
 impl api::PayoutCreate for Adyen {}
+#[cfg(feature = "payouts")]
 impl api::PayoutEligibility for Adyen {}
+#[cfg(feature = "payouts")]
 impl api::PayoutFulfill for Adyen {}
 
+#[cfg(feature = "payouts")]
 impl services::ConnectorIntegration<api::PCreate, types::PayoutsData, types::PayoutsResponseData>
     for Adyen
 {
 }
 
+#[cfg(feature = "payouts")]
 impl
     services::ConnectorIntegration<
         api::PEligibility,
@@ -726,6 +732,7 @@ impl
     }
 }
 
+#[cfg(feature = "payouts")]
 impl services::ConnectorIntegration<api::PFulfill, types::PayoutsData, types::PayoutsResponseData>
     for Adyen
 {

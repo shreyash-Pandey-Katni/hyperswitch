@@ -9,6 +9,7 @@ use utoipa::ToSchema;
 
 use crate::{enums as api_enums, payments};
 
+#[cfg(feature = "payouts")]
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub enum PayoutRequest {
     PayoutActionRequest(PayoutActionRequest),
@@ -16,6 +17,7 @@ pub enum PayoutRequest {
     PayoutRetrieveRequest(PayoutRetrieveRequest),
 }
 
+#[cfg(feature = "payouts")]
 #[derive(Default, Debug, Deserialize, Serialize, Clone, ToSchema)]
 #[serde(deny_unknown_fields)]
 pub struct PayoutCreateRequest {
@@ -119,6 +121,7 @@ pub struct PayoutCreateRequest {
     pub metadata: Option<pii::SecretSerdeValue>,
 }
 
+#[cfg(feature = "payouts")]
 #[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum PayoutMethodData {
@@ -126,12 +129,14 @@ pub enum PayoutMethodData {
     Bank(Bank),
 }
 
+#[cfg(feature = "payouts")]
 impl Default for PayoutMethodData {
     fn default() -> Self {
         Self::Card(Card::default())
     }
 }
 
+#[cfg(feature = "payouts")]
 #[derive(Default, Eq, PartialEq, Clone, Debug, Deserialize, Serialize, ToSchema)]
 pub struct Card {
     /// The card number
@@ -151,6 +156,7 @@ pub struct Card {
     pub card_holder_name: Secret<String>,
 }
 
+#[cfg(feature = "payouts")]
 #[derive(Eq, PartialEq, Clone, Debug, Serialize, ToSchema)]
 /// TODO: Implement standard format display for Bank
 pub struct Bank {
@@ -187,6 +193,7 @@ pub struct Bank {
     pub bank_name: String,
 }
 
+#[cfg(feature = "payouts")]
 impl Default for Bank {
     fn default() -> Self {
         Self {
@@ -202,6 +209,7 @@ impl Default for Bank {
     }
 }
 
+#[cfg(feature = "payouts")]
 impl<'de> Deserialize<'de> for Bank {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -289,6 +297,7 @@ impl<'de> Deserialize<'de> for Bank {
     }
 }
 
+#[cfg(feature = "payouts")]
 #[derive(Debug, ToSchema, Clone, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct PayoutCreateResponse {
@@ -394,11 +403,13 @@ pub struct PayoutCreateResponse {
     pub error_code: Option<String>,
 }
 
+#[cfg(feature = "payouts")]
 #[derive(Default, Debug, Clone, Deserialize)]
 pub struct PayoutRetrieveBody {
     pub force_sync: Option<bool>,
 }
 
+#[cfg(feature = "payouts")]
 #[derive(Default, Debug, Serialize, ToSchema, Clone, Deserialize)]
 pub struct PayoutRetrieveRequest {
     /// Unique identifier for the payout. This ensures idempotency for multiple payouts
@@ -417,6 +428,7 @@ pub struct PayoutRetrieveRequest {
     pub force_sync: Option<bool>,
 }
 
+#[cfg(feature = "payouts")]
 #[derive(Default, Debug, Serialize, ToSchema, Clone, Deserialize)]
 pub struct PayoutActionRequest {
     /// Unique identifier for the payout. This ensures idempotency for multiple payouts

@@ -403,6 +403,7 @@ pub trait ConnectorActions: Connector {
             payment_method_token: None,
             connector_customer: None,
             preprocessing_id: None,
+            #[cfg(feature = "payouts")]
             payout_method_data: None,
         }
     }

@@ -653,6 +653,7 @@ default_imp_for_pre_processing_steps!(
     connector::Zen
 );
 
+#[cfg(feature = "payouts")]
 macro_rules! default_imp_for_payouts {
     ($($path:ident::$connector:ident),*) => {
         $(
@@ -669,10 +670,13 @@ macro_rules! default_imp_for_payouts {
     };
 }
 
+#[cfg(feature = "payouts")]
 #[cfg(feature = "dummy_connector")]
 impl<const T: u8> api::Payouts for connector::DummyConnector<T> {}
+#[cfg(feature = "payouts")]
 #[cfg(feature = "dummy_connector")]
 impl<const T: u8> api::PayoutCreate for connector::DummyConnector<T> {}
+#[cfg(feature = "payouts")]
 #[cfg(feature = "dummy_connector")]
 impl<const T: u8>
     services::ConnectorIntegration<api::PCreate, types::PayoutsData, types::PayoutsResponseData>
@@ -680,6 +684,7 @@ impl<const T: u8>
 {
 }
 
+#[cfg(feature = "payouts")]
 default_imp_for_payouts!(
     connector::Aci,
     connector::Airwallex,
@@ -716,6 +721,7 @@ default_imp_for_payouts!(
     connector::Zen
 );
 
+#[cfg(feature = "payouts")]
 macro_rules! default_imp_for_payouts_eligibility {
     ($($path:ident::$connector:ident),*) => {
         $(
@@ -731,8 +737,10 @@ macro_rules! default_imp_for_payouts_eligibility {
     };
 }
 
+#[cfg(feature = "payouts")]
 #[cfg(feature = "dummy_connector")]
 impl<const T: u8> api::PayoutEligibility for connector::DummyConnector<T> {}
+#[cfg(feature = "payouts")]
 #[cfg(feature = "dummy_connector")]
 impl<const T: u8>
     services::ConnectorIntegration<
@@ -743,6 +751,7 @@ impl<const T: u8>
 {
 }
 
+#[cfg(feature = "payouts")]
 default_imp_for_payouts_eligibility!(
     connector::Aci,
     connector::Airwallex,
@@ -779,6 +788,7 @@ default_imp_for_payouts_eligibility!(
     connector::Zen
 );
 
+#[cfg(feature = "payouts")]
 macro_rules! default_imp_for_payouts_fulfill {
     ($($path:ident::$connector:ident),*) => {
         $(
@@ -794,8 +804,10 @@ macro_rules! default_imp_for_payouts_fulfill {
     };
 }
 
+#[cfg(feature = "payouts")]
 #[cfg(feature = "dummy_connector")]
 impl<const T: u8> api::PayoutFulfill for connector::DummyConnector<T> {}
+#[cfg(feature = "payouts")]
 #[cfg(feature = "dummy_connector")]
 impl<const T: u8>
     services::ConnectorIntegration<api::PFulfill, types::PayoutsData, types::PayoutsResponseData>
@@ -803,6 +815,7 @@ impl<const T: u8>
 {
 }
 
+#[cfg(feature = "payouts")]
 default_imp_for_payouts_fulfill!(
     connector::Aci,
     connector::Airwallex,

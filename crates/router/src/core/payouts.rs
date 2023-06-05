@@ -27,6 +27,7 @@ use crate::{
 };
 
 // ********************************************** TYPES **********************************************
+#[cfg(feature = "payouts")]
 #[derive(Clone)]
 pub struct PayoutData {
     pub billing_address: Option<domain::Address>,
@@ -39,6 +40,7 @@ pub struct PayoutData {
 
 // ********************************************** CORE FLOWS **********************************************
 
+#[cfg(feature = "payouts")]
 #[instrument(skip_all)]
 pub async fn payouts_create_core(
     state: &AppState,
@@ -77,6 +79,7 @@ where
     .await
 }
 
+#[cfg(feature = "payouts")]
 pub async fn payouts_update_core(
     state: &AppState,
     merchant_account: domain::MerchantAccount,
@@ -158,6 +161,7 @@ pub async fn payouts_update_core(
     .await
 }
 
+#[cfg(feature = "payouts")]
 #[instrument(skip_all)]
 pub async fn payouts_retrieve_core(
     state: &AppState,
@@ -180,6 +184,7 @@ pub async fn payouts_retrieve_core(
     .await
 }
 
+#[cfg(feature = "payouts")]
 #[instrument(skip_all)]
 pub async fn payouts_cancel_core(
     state: &AppState,
@@ -217,6 +222,7 @@ pub async fn payouts_cancel_core(
     .await
 }
 
+#[cfg(feature = "payouts")]
 #[instrument(skip_all)]
 pub async fn payouts_fulfill_core(
     state: &AppState,
@@ -279,6 +285,7 @@ pub async fn payouts_fulfill_core(
 }
 
 // ********************************************** HELPERS **********************************************
+#[cfg(feature = "payouts")]
 pub async fn call_connector_payout(
     state: &AppState,
     merchant_account: &domain::MerchantAccount,
@@ -358,6 +365,7 @@ pub async fn call_connector_payout(
     .await
 }
 
+#[cfg(feature = "payouts")]
 pub async fn check_payout_eligibility(
     state: &AppState,
     merchant_account: &domain::MerchantAccount,
@@ -443,6 +451,7 @@ pub async fn check_payout_eligibility(
     Ok(payout_data.clone())
 }
 
+#[cfg(feature = "payouts")]
 pub async fn create_payout(
     state: &AppState,
     merchant_account: &domain::MerchantAccount,
@@ -528,6 +537,7 @@ pub async fn create_payout(
     Ok(payout_data.clone())
 }
 
+#[cfg(feature = "payouts")]
 pub async fn fulfill_payout(
     state: &AppState,
     merchant_account: &domain::MerchantAccount,
@@ -622,6 +632,7 @@ pub async fn fulfill_payout(
     Ok(payout_data.clone())
 }
 
+#[cfg(feature = "payouts")]
 pub async fn response_handler(
     _state: &AppState,
     merchant_account: &domain::MerchantAccount,
@@ -706,6 +717,7 @@ pub async fn response_handler(
 }
 
 // DB entries
+#[cfg(feature = "payouts")]
 pub async fn payout_create_db_entries(
     state: &AppState,
     merchant_account: &domain::MerchantAccount,
@@ -823,6 +835,7 @@ pub async fn payout_create_db_entries(
     })
 }
 
+#[cfg(feature = "payouts")]
 pub async fn make_payout_data(
     state: &AppState,
     merchant_account: &domain::MerchantAccount,

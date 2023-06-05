@@ -259,9 +259,10 @@ impl Refunds {
     }
 }
 
+#[cfg(feature = "payouts")]
 pub struct Payouts;
 
-#[cfg(any(feature = "olap", feature = "oltp"))]
+#[cfg(any(feature = "olap", feature = "oltp", feature = "payouts"))]
 impl Payouts {
     pub fn server(state: AppState) -> Scope {
         let mut route = web::scope("/payouts").app_data(web::Data::new(state));

@@ -12,6 +12,7 @@ use crate::{
 };
 
 /// Payouts - Create
+#[cfg(feature = "payouts")]
 #[utoipa::path(
     post,
     path = "/payouts/create",
@@ -43,6 +44,7 @@ pub async fn payouts_create(
 }
 
 /// Payouts - Retrieve
+#[cfg(feature = "payouts")]
 #[utoipa::path(
     get,
     path = "/payouts/retrieve/{payout_id}",
@@ -81,6 +83,7 @@ pub async fn payouts_retrieve(
 }
 
 /// Payouts - Update
+#[cfg(feature = "payouts")]
 #[utoipa::path(
     post,
     path = "/payouts/{payout_id}",
@@ -119,6 +122,7 @@ pub async fn payouts_update(
 }
 
 /// Payouts - Cancel
+#[cfg(feature = "payouts")]
 #[utoipa::path(
     post,
     path = "/payouts/{payout_id}/cancel",
@@ -157,6 +161,7 @@ pub async fn payouts_cancel(
 }
 
 /// Payouts - Fulfill
+#[cfg(feature = "payouts")]
 #[utoipa::path(
     post,
     path = "/payouts/{payout_id}/fulfill",

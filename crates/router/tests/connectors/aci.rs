@@ -75,6 +75,7 @@ fn construct_payment_router_data() -> types::PaymentsAuthorizeRouterData {
         payment_method_token: None,
         connector_customer: None,
         preprocessing_id: None,
+        #[cfg(feature = "payouts")]
         payout_method_data: None,
     }
 }
@@ -120,6 +121,7 @@ fn construct_refund_router_data<F>() -> types::RefundsRouterData<F> {
         payment_method_token: None,
         connector_customer: None,
         preprocessing_id: None,
+        #[cfg(feature = "payouts")]
         payout_method_data: None,
     }
 }
