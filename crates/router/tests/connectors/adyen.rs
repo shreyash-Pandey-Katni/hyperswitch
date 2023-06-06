@@ -42,12 +42,19 @@ impl AdyenTest {
                 billing: Some(Address {
                     address: Some(AddressDetails {
                         country: Some(api_models::enums::CountryAlpha2::US),
+                        state: Some(Secret::new("California".to_string())),
+                        city: Some("San Francisco".to_string()),
+                        zip: Some(Secret::new("94122".to_string())),
+                        line1: Some(Secret::new("1467".to_string())),
+                        line2: Some(Secret::new("Harrison Street".to_string())),
                         ..Default::default()
                     }),
                     phone: None,
                 }),
                 ..Default::default()
             }),
+            country: Some(api_models::enums::CountryAlpha2::NL),
+            currency: Some(enums::Currency::EUR),
             ..Default::default()
         })
     }
@@ -451,6 +458,127 @@ async fn should_fail_capture_for_invalid_payment() {
         capture_response.response.unwrap_err().message,
         String::from("Original pspReference required for this operation")
     );
+}
+
+/******************** Payouts test cases ********************/
+// Create SEPA payout
+#[cfg(feature = "payouts")]
+#[actix_web::test]
+async fn should_create_sepa_payout() {
+    let mut payment_info = AdyenTest::get_payment_info();
+    payment_info = payment_info.map(|mut pi| {
+        pi.payout_method_data = Some(api::PayoutMethodData::Bank(api::payouts::BankPayout::Sepa(
+            api::SepaBankTransfer {
+                iban: "NL46TEST0136169112".to_string(),
+                bic: Some("ABNANL2A".to_string()),
+                bank_name: "Deutsche Bank".to_string(),
+                bank_country_code: enums::CountryAlpha2::NL,
+                bank_city: "Amsterdam".to_string(),
+            },
+        )));
+        pi
+    });
+    let response = CONNECTOR
+        .create_payout(None, enums::PayoutType::Bank, payment_info)
+        .await
+        .expect("Payout bank creation response");
+    assert_eq!(
+        response.status.unwrap(),
+        enums::PayoutStatus::RequiresFulfillment
+    );
+}
+
+// Create and fulfill SEPA payout
+#[cfg(feature = "payouts")]
+#[actix_web::test]
+async fn should_create_and_fulfill_sepa_payout() {
+    let mut payment_info = AdyenTest::get_payment_info();
+    payment_info = payment_info.map(|mut pi| {
+        pi.payout_method_data = Some(api::PayoutMethodData::Bank(api::payouts::BankPayout::Sepa(
+            api::SepaBankTransfer {
+                iban: "NL46TEST0136169112".to_string(),
+                bic: Some("ABNANL2A".to_string()),
+                bank_name: "Deutsche Bank".to_string(),
+                bank_country_code: enums::CountryAlpha2::NL,
+                bank_city: "Amsterdam".to_string(),
+            },
+        )));
+        pi
+    });
+    let response = CONNECTOR
+        .create_and_fulfill_payout(None, enums::PayoutType::Bank, payment_info)
+        .await
+        .expect("Payout bank creation and fulfill response");
+    assert_eq!(response.status.unwrap(), enums::PayoutStatus::Success);
+}
+
+// Verifies if card is eligible for payout
+#[cfg(feature = "payouts")]
+#[actix_web::test]
+async fn should_verify_payout_eligibility() {
+    let mut payment_info = AdyenTest::get_payment_info();
+    payment_info = payment_info.map(|mut pi| {
+        pi.payout_method_data = Some(api::PayoutMethodData::Card(api::payouts::CardPayout {
+            card_number: cards::CardNumber::from_str("4111111111111111").unwrap(),
+            expiry_month: Secret::new("3".to_string()),
+            expiry_year: Secret::new("2030".to_string()),
+            card_holder_name: Secret::new("John Doe".to_string()),
+        }));
+        pi
+    });
+    let response = CONNECTOR
+        .verify_payout_eligibility(enums::PayoutType::Card, payment_info)
+        .await
+        .expect("Payout eligibility response");
+    assert_eq!(
+        response.status.unwrap(),
+        enums::PayoutStatus::RequiresCreation
+    );
+}
+
+// Fulfills card payout
+#[cfg(feature = "payouts")]
+#[actix_web::test]
+async fn should_fulfill_card_payout() {
+    let mut payment_info: Option<PaymentInfo> = AdyenTest::get_payment_info();
+    payment_info = payment_info.map(|mut pi| {
+        pi.payout_method_data = Some(api::PayoutMethodData::Card(api::payouts::CardPayout {
+            card_number: cards::CardNumber::from_str("4111111111111111").unwrap(),
+            expiry_month: Secret::new("3".to_string()),
+            expiry_year: Secret::new("2030".to_string()),
+            card_holder_name: Secret::new("John Doe".to_string()),
+        }));
+        pi
+    });
+    let response = CONNECTOR
+        .fulfill_payout(None, enums::PayoutType::Card, payment_info)
+        .await
+        .expect("Payout fulfill response");
+    assert_eq!(response.status.unwrap(), enums::PayoutStatus::Success);
+}
+
+// Cancels a created bank payout
+#[cfg(feature = "payouts")]
+#[actix_web::test]
+async fn should_create_and_cancel_created_payout() {
+    let mut payment_info = AdyenTest::get_payment_info();
+    payment_info = payment_info.map(|mut pi| {
+        pi.payout_method_data = Some(api::PayoutMethodData::Bank(api::payouts::BankPayout::Sepa(
+            api::SepaBankTransfer {
+                iban: "NL46TEST0136169112".to_string(),
+                bic: Some("ABNANL2A".to_string()),
+                bank_name: "Deutsche Bank".to_string(),
+                bank_country_code: enums::CountryAlpha2::NL,
+                bank_city: "Amsterdam".to_string(),
+            },
+        )));
+        pi
+    });
+    let response = CONNECTOR
+        .create_and_cancel_payout(None, enums::PayoutType::Bank, payment_info)
+        .await
+        .expect("Payout cancel response");
+    assert_eq!(response.status.unwrap(), enums::PayoutStatus::Cancelled);
 }
 
 // Connector dependent test cases goes here
